@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: k8s-api-gateway
-        image: wkddnjs9/k8s-api-gateway:0.0.3
+        image: wkddnjs9/k8s-api-gateway:0.0.4
         imagePullPolicy: Always
         env:
         - name: SPRING_PROFILES_ACTIVE
@@ -24,6 +24,10 @@ spec:
         volumeMounts:
           - mountPath: /etc/config
             name: api-gateway-config-volume
+            readOnly: true
+          - name: api-gateway-secret-volume
+            mountPath: /etc/secret
+            readOnly: true
       volumes:
         - name: api-gateway-config-volume
           configMap:
@@ -31,3 +35,9 @@ spec:
             items:
               - key: application-dev.yml
                 path: application-dev.yml
+        - name: api-gateway-secret-volume
+          secret:
+            secretName: api-gateway-secret
+            items:
+              - key: application-secret.yml
+                path: application-secret.yml
